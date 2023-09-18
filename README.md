@@ -1,2 +1,3 @@
 # monte
- A cythonized and parallelized library to implement Monte Carlo simulations
+
+A cythonized library to implement Monte Carlo simulations for making probabilistic predictions.
