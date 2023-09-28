@@ -22,7 +22,7 @@ cpdef np.ndarray[double] simulate(np.ndarray[double] prices, int candles, int it
     stdev = log_returns.std()
     drift = mu - (0.5 * var * (prices.shape[0] - 2) / prices.shape[0])
 
-    Z = np.random.standard_t(df=prices.shape[0] - 1, size=(candles, iterations))
+    Z = np.random.laplace(size=(candles, iterations))
     daily_returns = np.exp(drift + stdev * Z)
 
     price_paths = np.zeros_like(daily_returns)

@@ -1,23 +1,26 @@
+from typing import Callable
+
 import numpy as np
 import pandas as pd
 import MonteCarloCython as MC
 
 
 class MonteCarlo:
-    __simulations: int
-    __forecasts: int
-
-    def __init__(self, simulations: int, forecasts: int) -> None:
-        self.__simulations = simulations
-        self.__forecasts = forecasts
-
-    def simulate(self, data: pd.Series) -> np.ndarray:
-        return MC.simulate(data.values, self.__forecasts, self.__simulations)
+    @staticmethod
+    def simulate(
+        data: np.ndarray,
+        forecasts: int,
+        simulations: int,
+        distribution: Callable = np.random.standard_t,
+    ) -> np.ndarray:
+        return MC.simulate(data, forecasts, simulations)
 
     @staticmethod
-    def expected_value(paths: np.ndarray) -> float:
+    def expected_value(data: pd.Series, forecasts: int, simulations: int) -> float:
+        paths = MonteCarlo.simulate(data, forecasts, simulations)
         return paths[-1].mean()
 
     @staticmethod
-    def expected_returns(paths: np.ndarray) -> float:
-        return ((MonteCarlo.expected_value(paths) / paths[0, 1]) - 1) * 100
+    def expected_returns(data: pd.Series, forecasts: int, simulations: int) -> float:
+        paths = MonteCarlo.simulate(data, forecasts, simulations)
+        return ((paths[-1].mean() / paths[0, 1]) - 1) * 100
